@@ -1,0 +1,112 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+
+public class SpotterServer {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) throws Exception{
+        System.out.println("The birthday spotter server is running.");
+        int clientNumber = 0;
+        ServerSocket listener = new ServerSocket(9898);
+        try {
+            while (true) {
+                new Spotter(listener.accept(), clientNumber++).start();
+            }
+        } finally {
+            listener.close();
+        }
+    }
+     private static class Spotter extends Thread {
+        private Socket socket;
+        private int clientNumber;
+
+        public Spotter(Socket socket, int clientNumber) {
+            this.socket = socket;
+            this.clientNumber = clientNumber;
+            log("New connection with client# " + clientNumber + " at " + socket);
+        }
+        public void run() {
+            try {
+
+       
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(socket.getInputStream()));
+                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+
+                // Send a welcome message to the client.
+                out.println("Hello, you are client #" + clientNumber + ".");
+                out.println("Enter your NIC number please: And omit the V at the end\n");
+
+                int day;
+ 
+                while (true) {
+                    String year = in.readLine();
+                    String num=year.substring(0,2);
+                    String num2=year.substring(2,5);
+                    int Num1=Integer.parseInt(num);
+                    int Num2=Integer.parseInt(num2);
+                   
+                       
+                        out.println("Year you were born is 19"+ Num1);
+                        
+                        if(Num2>500)
+                        {
+                            out.println("You are A female");
+                            day=Num2-500;
+                        }else{
+                            out.println("You are a male");
+                            day=Num2;
+                        }
+                        out.println("Your Birthday is ");
+                        if (day<=31)
+                        out.println("January " + day);
+                        else if (day<=60)
+                        out.println("February " + (day-31));
+                        else if (day<=91)
+                        out.println("March "+(day-60));
+                        else if (day<=121)
+                        out.println("April "+(day-91));
+                        else if (day <=152)
+                        out.println("May "+ (day-121));
+                        else if (day<=182)
+                        out.println("June "+ (day-152));
+                        else if (day<=213)
+                        out.println("July " +(day-182));
+                        else if (day<=244)
+                        out.println("August "+ (day-213));
+                        else if (day<=274)
+                        out.println("September " + (day-244));
+                        else if (day<=305)
+                        out.println("October " + (day-274));
+                        else if (day<=335)
+                        out.println("Novermber " + (day-305));
+                        else if (day<=366)
+                        out.println("December " + (day-335));
+                        else 
+                        out.println("*\n");
+                     }
+                
+            } catch (IOException e) {
+                log("Error handling client# " + clientNumber + ": " + e);
+            } finally {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    log("Couldn't close a socket, what's going on?");
+                }
+                log("Connection with client    " + clientNumber + " closed");
+            }
+        }
+
+        private void log(String message) {
+            System.out.println(message);
+        }
+    }
+}
