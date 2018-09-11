@@ -1,0 +1,98 @@
+
+package birthdayspotter;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class BirthdaySpotter{
+
+  
+    static ServerSocket ser;
+    static Socket sock;
+    static DataInputStream din;
+    static DataOutputStream dout;
+    
+    
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(null);
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    
+   
+      public static void run(){  
+        String year="";
+        try{
+            
+             while(!year.equals(null)){
+                 year=din.readUTF();
+                 String num=year.substring(0,2);
+                    String num2=year.substring(2,5);
+                    int Num1=Integer.parseInt(num);
+                    int Num2=Integer.parseInt(num2);
+                    int day;
+                       
+                       dout.writeUTF("Year you were born is 19"+ Num1);
+                        
+                        if(Num2>500)
+                        {
+                            dout.writeUTF("You are A female");
+                            day=Num2-500;
+                        }else{
+                            dout.writeUTF("You are a male");
+                            day=Num2;
+                        }
+                        if (day<=31)
+                        dout.writeUTF("January " + day);
+                        else if (day<=60)
+                        dout.writeUTF("February " + (day-31));
+                        else if (day<=91)
+                        dout.writeUTF("March "+(day-60));
+                        else if (day<=121)
+                        dout.writeUTF("April "+(day-91));
+                        else if (day <=152)
+                        dout.writeUTF("May "+ (day-121));
+                        else if (day<=182)
+                        dout.writeUTF("June "+ (day-152));
+                        else if (day<=213)
+                        dout.writeUTF("July " +(day-182));
+                        else if (day<=244)
+                        dout.writeUTF("August "+ (day-213));
+                        else if (day<=274)
+                        dout.writeUTF("September " + (day-244));
+                        else if (day<=305)
+                        dout.writeUTF("October " + (day-274));
+                        else if (day<=335)
+                        dout.writeUTF("Novermber " + (day-305));
+                        else if (day<=366)
+                        dout.writeUTF("December " + (day-335));
+                        else 
+                       dout.writeUTF("*\n");
+             }
+        }catch(Exception e){}
+    }
+      
+      public static void main(String args[]){
+      try {
+            System.out.println("Listening to port!");
+            ser=new ServerSocket(8888);
+            sock=ser.accept();
+            System.out.println("Connected to client!");
+            din=new DataInputStream(sock.getInputStream());
+            dout=new DataOutputStream(sock.getOutputStream());
+            
+            run();
+            
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+      
+      }
+
+    
+}
